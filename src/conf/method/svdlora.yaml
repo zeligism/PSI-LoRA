@@ -1,0 +1,5 @@
+name: svdlora
+linear_module:
+  _target_: src.models.SVDLoRALinear
+  _partial_: true
+  rank: ${lora_rank}

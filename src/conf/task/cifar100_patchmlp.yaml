@@ -1,0 +1,18 @@
+defaults:
+  - cifar10_patchmlp
+
+name: cifar100_patchmlp
+
+dataset: &dataset
+  _target_: torchvision.datasets.CIFAR100
+
+train_dataset:
+  <<: *dataset
+  train: true
+
+test_dataset:
+  <<: *dataset
+  train: false
+
+model:
+  num_classes: 100

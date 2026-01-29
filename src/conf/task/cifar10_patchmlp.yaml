@@ -1,0 +1,63 @@
+name: cifar10_patchmlp
+
+default_hyperparams:
+  num_epochs: 20
+  lr: 0.01
+  momentum: 0.9
+  batch_size: 64
+  test_batch_size: 512
+  num_workers: 2
+  target_metric: test/accuracy
+  lora_rank: 16
+
+
+dataset: &dataset
+  _target_: torchvision.datasets.CIFAR10
+  root: ${data_dir}
+  train: ???
+  download: true
+  transform:
+    _target_: torchvision.transforms.Compose
+    transforms:
+      - _target_: torchvision.transforms.Resize
+        size: [32, 32]
+      - _target_: torchvision.transforms.ToTensor
+      - _target_: torchvision.transforms.Normalize
+        mean: [0.1307]
+        std: [0.3081]
+
+train_dataset:
+  <<: *dataset
+  train: true
+
+test_dataset:
+  <<: *dataset
+  train: false
+
+train_dataloader:
+  _target_: torch.utils.data.DataLoader
+  dataset: ${task.train_dataset}
+  batch_size: ${batch_size}
+  shuffle: true
+  num_workers: ${num_workers}
+
+test_dataloader:
+  _target_: torch.utils.data.DataLoader
+  dataset: ${task.test_dataset}
+  batch_size: ${test_batch_size}
+  shuffle: false
+  num_workers: ${num_workers}
+
+model:
+  _target_: src.models.LeNet5
+  num_classes: 10
+  num_channels: 3
+  LinearModule: ${linear_module}
+
+loss_fn:
+  _target_: torch.nn.CrossEntropyLoss
+
+metric_fns:
+  accuracy:
+    _target_: src.utils.accuracy
+    _partial_: true

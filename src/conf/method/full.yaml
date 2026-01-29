@@ -1,0 +1,4 @@
+name: full
+linear_module:
+  _target_: torch.nn.Linear
+  _partial_: true

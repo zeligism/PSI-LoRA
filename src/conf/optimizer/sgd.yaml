@@ -1,0 +1,8 @@
+name: sgd
+optimizer:
+  _target_: torch.optim.SGD
+  _partial_: True
+  lr: ${lr}
+  momentum: ${momentum}
+  weight_decay: ${weight_decay}
+  nesterov: false

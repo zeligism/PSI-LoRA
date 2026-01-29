@@ -1,0 +1,66 @@
+defaults:
+  - task: linear
+  - method: full
+  - optimizer: sgd
+  - _self_
+
+# ----- Meta Config ----- #
+data_dir: ${oc.env:DATA_DIR,.}/data
+output_dir: ${oc.env:OUTPUT_DIR,.}/output
+
+experiment: test_${task.name}
+identifier: identifier
+
+continue_training: false
+save_model_every_epoch: true
+
+hydra:
+  run:
+    dir: ${output_dir}/${experiment}/${hydra.job.override_dirname}
+  sweep:
+    dir: ${output_dir}/${experiment}
+    subdir: ${hydra.job.override_dirname}
+  sweeper:
+    params: ???  # should be overriden from command line (e.g., hydra/sweeper=some_sweeper)
+
+
+# ----- Experiment Config ----- #
+
+seed: 0
+
+num_epochs: ${task.default_hyperparams.num_epochs}
+num_workers: ${task.default_hyperparams.num_workers}
+batch_size: ${task.default_hyperparams.batch_size}
+test_batch_size: ${task.default_hyperparams.test_batch_size}
+
+lr: ${task.default_hyperparams.lr}
+momentum: ${task.default_hyperparams.momentum}
+weight_decay: 0.0
+lora_rank: ${task.default_hyperparams.lora_rank}
+target_metric: ${task.default_hyperparams.target_metric}
+
+adamw_betas: [0.9, 0.999]
+adamw_weight_decay: 1e-4
+
+oplora_iters: 1
+oplora_lmbd: 1e-3
+oplora_damping: 0.1
+oplora_betas: [0.9, 0.999]
+oplora_rank_mult: 1
+
+device:
+  _target_: src.utils.init_device
+
+linear_module: ${method.linear_module}
+
+trainer:
+  _target_: src.basic_trainer.BasicTrainer
+  model: ${task.model}
+  train_loader: ${task.train_dataloader}
+  train_criterion: ${task.loss_fn}
+  test_loader: ${task.test_dataloader}
+  test_criterion: ${task.loss_fn}
+  optimizer: ${optimizer.optimizer}
+  device: ${device}
+  metric_fns: ${task.metric_fns}
+  grad_accumulation_steps: 1

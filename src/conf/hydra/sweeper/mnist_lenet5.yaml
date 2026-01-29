@@ -1,0 +1,35 @@
+---
+_target_: hydra_plugins.hydra_optuna_sweeper.optuna_sweeper.OptunaSweeper
+
+# # For TPE sampler
+# sampler:
+#   _target_: optuna.samplers.TPESampler
+#   seed: ${seed}
+# n_trials: 20
+
+# Grid sampler
+sampler:
+  _target_: optuna.samplers.GridSampler
+  _partial_: True  # this is needed for grid samplers
+# NOTE: GridSampler will set n_trials to num of combinations automatically. Otherwise, sweeper will run forever...
+n_trials: 10000
+
+# This should be decided depending on the 'target_metric'
+direction: minimize
+
+storage: null
+study_name: ${experiment}
+n_jobs: 10000
+# max_failure_rate: 0.0  # might be necessary for an older version
+search_space: null
+custom_search_space: null
+
+params:
+  # seed: range(3)
+  model: choice(lenet5)
+  dataset: choice(mnist, cifar10)
+  optimizer: choice(sgd)
+  lr: choice(1e-2)
+  method: choice(full, lora, svdlora, oplora, oplora_8)
+  target_metric: test_loss
+  continue_training: true

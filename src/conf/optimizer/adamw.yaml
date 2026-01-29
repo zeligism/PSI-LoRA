@@ -1,0 +1,9 @@
+name: adamw
+optimizer:
+  _target_: torch.optim.AdamW
+  _partial_: True
+  lr: ${lr}
+  betas: ${adamw_betas}
+  weight_decay: ${adamw_weight_decay}
+  amsgrad: false
+  eps: 1e-8

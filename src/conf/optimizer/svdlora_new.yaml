@@ -1,0 +1,8 @@
+name: svdlora_new
+
+optimizer:
+  _target_: src._test_optimizer.SVDLoraNewOptimizer
+  _partial_: True
+  lr: ${lr}
+  momentum: ${momentum}
+  rank: ${lora_rank}

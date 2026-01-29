@@ -1,0 +1,5 @@
+name: lora
+linear_module:
+  _target_: src.models.LoRALinear
+  _partial_: true
+  rank: ${lora_rank}

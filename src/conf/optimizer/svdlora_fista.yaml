@@ -1,0 +1,9 @@
+name: svdlora_fista
+
+optimizer:
+  _target_: src._test_optimizer.SVDLoRAFISTA
+  _partial_: True
+  lr: ${lr}
+  momentum: ${momentum}
+  lmbd: ${oplora_lmbd}
+  lookahead_iters: ${oplora_iters}

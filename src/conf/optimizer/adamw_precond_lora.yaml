@@ -1,0 +1,8 @@
+name: adamw_precond_lora
+optimizer:
+  _target_: src.oplora.optimizer.AdamWWithPreconditionedLora
+  _partial_: True
+  lmbd: ${oplora_lmbd}
+  lr: ${lr}
+  betas: ${adamw_betas}
+  weight_decay: ${adamw_weight_decay}

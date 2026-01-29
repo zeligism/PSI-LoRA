@@ -1,0 +1,10 @@
+name: oplora_fista
+
+optimizer:
+  _target_: src.oplora.optimizer.OPLoraOptimizerFISTA
+  _partial_: True
+  lr: ${lr}
+  momentum: ${momentum}
+  lmbd: ${oplora_lmbd}
+  lookahead_iters: ${oplora_iters}
+  rank_multiplier: ${oplora_rank_mult}

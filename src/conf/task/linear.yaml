@@ -1,0 +1,57 @@
+name: linear
+
+default_hyperparams:
+  num_epochs: 100
+  lr: 0.1
+  momentum: 0.75
+  batch_size: 64
+  test_batch_size: 512
+  num_workers: 0
+  in_features: 200
+  out_features: 600
+  target_metric: test/loss
+  lora_rank: 8
+
+dataset: &dataset
+  _target_: src.linear_dataset.LinearSyntheticDataset
+  in_features: ${task.default_hyperparams.in_features}
+  out_features: ${task.default_hyperparams.out_features}
+  rank: ${lora_rank}
+  input_type: eye  # eye or random
+  seed: ${seed}
+
+train_dataset: ${task.dataset}
+test_dataset: ${task.dataset}
+
+train_dataloader:
+  _target_: torch.utils.data.DataLoader
+  dataset: ${task.train_dataset}
+  batch_size: ${batch_size}
+  shuffle: true
+  num_workers: ${num_workers}
+
+test_dataloader:
+  _target_: torch.utils.data.DataLoader
+  dataset: ${task.test_dataset}
+  batch_size: ${test_batch_size}
+  shuffle: false
+  num_workers: ${num_workers}
+
+model:
+  _target_: src.models.get_linear_model
+  in_features: ${task.dataset.in_features}
+  out_features: ${task.dataset.out_features}
+  method: ${method}
+  rank: ${lora_rank}
+  LinearModule: ${linear_module}
+  seed: ${seed}
+
+linear_module:
+  _partial_: true
+  _target_: torch.nn.Linear
+
+loss_fn:
+  _target_: torch.nn.MSELoss
+  reduction: sum
+
+metric_fns: {}

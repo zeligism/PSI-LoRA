@@ -1,0 +1,17 @@
+# python -m src.run task=linear method=lora optimizer=scaled_oplora num_epochs=300 lr=0.5 oplora_iters=16 oplora_betas="[0.75, 0.9]" oplora_damping=1
+name: scaledoplora
+optimizer:
+  _target_: src.oplora.optimizer.ScaledOPLoraOptimizer
+  _partial_: True
+  lr: ${lr}
+  lmbd: ${oplora_lmbd}
+  lookahead_iters: ${oplora_iters}
+
+  damping: ${oplora_damping}
+  betas: ${oplora_betas}
+  kfac_metric: true
+  sqrt_metric: true
+  metric_type: diagonal  # dense, diagonal, or lowrank
+  loss_reduction: ${oc.select:task.loss_fn.reduction,mean}
+  rank_multiplier: ${oplora_rank_mult}
+  start_precondition_step: 0

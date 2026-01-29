@@ -1,0 +1,9 @@
+name: oplora_proj
+
+optimizer:
+  _target_: src.oplora.optimizer.OPLoraOptimizerProj
+  _partial_: True
+  lr: ${lr}
+  momentum: ${momentum}
+  lmbd: ${oplora_lmbd}
+  lookahead_iters: ${oplora_iters}

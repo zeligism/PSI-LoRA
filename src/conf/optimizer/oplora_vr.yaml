@@ -1,0 +1,13 @@
+# This optimizer requires a closure
+name: oplora_vr
+
+optimizer:
+  _target_: src.oplora.optimizer.OPLoraOptimizerVR
+  _partial_: True
+  lr: ${lr}
+  momentum: ${momentum}
+  lmbd: ${oplora_lmbd}
+  lookahead_iters: ${oplora_iters}
+  rank_multiplier: ${oplora_rank_mult}
+  which_vr: storm
+  correction_strength: 0.5
